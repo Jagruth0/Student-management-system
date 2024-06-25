@@ -1,0 +1,54 @@
+
+<%- include('partials/header') %>
+
+  <div class="grid-item content">
+      <div class="p-4 announcement-list list-group">
+        <h1 class=""><%= classname %></h1>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-light mb-2" data-bs-toggle="modal" data-bs-target="#newAnnouncement">
+        New Announcement
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="newAnnouncement" tabindex="-1" aria-labelledby="newAnnouncementLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="newAnnouncementLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newAnnouncementForm" action="/announcements/class/new" method="post">
+                    <div class="mb-3">
+                        <input class="form-control" type="text" name="title" id="newtitle" placeholder="Title">
+                    </div>
+                    <textarea class="form-control" type="text" name="content" id="newcontent" placeholder="Description"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="newAnnouncementForm" class="btn btn-primary">Submit</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <% if (locals.announcements) { %>
+          <% for(let ind = announcements.length-1; ind>=0; ind--) {%>
+            <form action="/teacher/announcement" method="post">
+              <input style="display: none;" type="text" name="index" value="<%= ind %>">
+              <button type="submit" class="list-group-item list-group-item-action rounded mb-2">
+                <h4> <%= announcements[ind][0] %> </h4>
+                <hr>
+                <p> <%= announcements[ind][1] %> </p>
+              </button>
+            </form>
+        <%  }
+        } else { %>
+          <p> No Recent Announcements in this class. </p>
+        <% } %>
+      </div>
+  </div>
+
+<%- include('partials/footer') %>

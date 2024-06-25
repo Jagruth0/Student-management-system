@@ -1,0 +1,74 @@
+<%- include("partials/header") %>
+
+    <div class="grid-item content">
+        <h2 class="mt-4 ms-4">
+            <%= classname %>
+        </h2>
+
+        <h5	 class="ms-4">
+            Total Days: <%= students[0].total_days %>
+        </h5>
+
+
+        <div class=" p-4">
+            <div class="container attendance text-left">
+                <div class="row">
+                  <div class="col">
+                    Admn No
+                  </div>
+                  <div class="col">
+                    First Name
+                  </div>
+                  <div class="col">
+                    Last Name
+                  </div>
+                  <div class="col">
+                    Days Attended
+                  </div>
+                  <div class="col">
+                    Percentage
+                  </div>
+                  <div class="col">
+                    Attendance
+                  </div>
+                </div>
+
+
+                <form action="/class/attendance" id="attendanceForm" method="post">
+                    <% if (locals.students) {
+                    students.forEach(s => { %>
+                    <div class="row mt-3 pt-1 pb-1 border">
+                        <div class="col">
+                        <%= s.admnno %>
+                        </div>
+                        <div class="col">
+                        <%= s.fname %>
+                        </div>
+                        <div class="col">
+                        <%= s.lname %>
+                        </div>
+                        <div class="col">
+                            <%= s.attendance %>
+                        </div>
+                        <div class="col">
+                            <%= Math.floor((s.attendance/s.total_days)*10000)/100 %>%
+                        </div>
+                        <div class="col">
+                            <div style="width: 43px;"  class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" name="present" value= <%= s.admnno %> aria-label="Checkbox for Present">
+                            </div>
+                        </div>
+                    </div>
+                    <% });
+                    } %>
+                </form>
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="btn btn-light mt-3 align-items-center" type="submit" form="attendanceForm"> Submit </button>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+
+<%- include("partials/footer") %>

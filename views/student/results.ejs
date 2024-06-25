@@ -1,0 +1,93 @@
+<%- include("partials/header") %>
+
+    <div class="grid-item content">
+        <div class=" p-4">
+            <div class="container result text-left">
+                
+                <div class="row">
+                  <div class="col">
+                    Class
+                  </div>
+                  <div class="col">
+                    Letter Grade
+                  </div>
+                  <div class="col">
+                    Grade
+                  </div>
+                </div>
+
+
+                <% let cumGrade = 0; 
+                let totSub = 0;
+
+                if (locals.grades) {
+                  grades.forEach(gra => { %>
+
+                  <div class="row mt-3 pt-1 pb-1 border">
+                    <div class="col">
+                      <%= gra.name %>
+                    </div>
+
+                    <div class="col">
+                        <% lettergrade=letterGrade(gra.grade) %>
+                      <%= lettergrade %>
+                    </div>
+
+                    <div class="col">
+                      <%= gra.grade %>
+                    </div>
+                  </div>
+                 <% cumGrade += gra.grade
+                    totSub++;
+                    });
+                    } %>
+
+
+                <div class="row mt-4 pt-1 pb-1 border border-light-subtle border-2">
+                    <div class="col">
+                        CGPA
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col">
+                        <%= Math.floor((cumGrade/totSub)*100)/100 %>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+
+<%- include("partials/footer") %>
+
+
+<%
+    function letterGrade(grade) {
+        switch (grade) {
+            case 10:
+                return "A1"
+                break;
+            case 9:
+                return "A2"
+                break;
+            case 8:
+                return "B1"
+                break;
+            case 7:
+                return "B2"
+                break;
+            case 6:
+                return "C1"
+                break;
+            case 5:
+                return "C2"
+                break;
+            case 4:
+                return "D"
+                break;
+            default:
+                return "F"
+                break;
+        }
+    }
+
+%>

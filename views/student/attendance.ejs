@@ -1,0 +1,42 @@
+<%- include("partials/header") %>
+
+    <div class="grid-item content">
+        <div class=" p-4">
+            <div class="container attendance text-left">
+                <div class="row">
+                  <div class="col">
+                    Class
+                  </div>
+                  <div class="col">
+                    Days attended
+                  </div>
+                  <div class="col">
+                    Total days
+                  </div>
+                  <div class="col">
+                    Percentage
+                  </div>
+                </div>
+                <% if (locals.attend) {
+                  attend.forEach(a => { %>
+                  <div class="row mt-3 pt-1 pb-1 border">
+                    <div class="col">
+                      <%= a.name %>
+                    </div>
+                    <div class="col">
+                      <%= a.attendance %>
+                    </div>
+                    <div class="col">
+                      <%= a.total_days %>
+                    </div>
+                    <div class="col">
+                      <%= Math.floor((a.attendance/a.total_days)*10000)/100 %>%
+                    </div>
+                  </div>
+                 <% });
+                } %>
+              </div>
+        </div>
+    </div>
+
+<%- include("partials/footer") %>

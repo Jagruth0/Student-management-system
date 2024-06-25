@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+
+  <div class="grid-item content">
+      <div class="p-5">
+        <h1 class="pb-3">Select class</h1>
+        <% if (locals.classes) {
+          classes.forEach(cl => { %>
+            <form class="pb-2" action="/student/announcements/class" method="post">
+              <button class="btn btn-dark btn" name="class" value="<%= cl.name %>" type="submit"><%= cl.name %>
+              </button>
+            </form>
+        <%  });
+        } else { %>
+          <p> No Registered Classes. </p>
+        <% } %>
+      </div>
+  </div>
+
+<%- include('partials/footer') %>

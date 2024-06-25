@@ -1,0 +1,66 @@
+* {}
+html{}
+body{
+    color: #dee2e6;
+    background-color:#2b3035d4 ;
+}
+h1{}
+.login-form{
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+/* .form-control{
+    color: #dee2e6 !important;
+    background-color:#2b3035 !important;
+} */
+.login-form .btn{
+    margin-top: 20px;
+    width: 100%;
+}
+header>div{
+    justify-content: end;
+}
+.grid-container{
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 69px calc(100vh - 69px);
+    height: 100vh;
+    width: 100%;
+    grid-template-areas: "sidebar header" 
+                         "sidebar content";
+}
+.sidebar{
+    grid-area: sidebar;
+}
+.nav-item .btn{
+    width: 275px;
+    height: 100%;
+    text-align: left;
+    margin: -15px;
+    color: white;
+}
+header{
+    grid-area: header;
+}
+.content{
+    grid-area: content;
+    overflow: auto;
+}
+.announcement-list p{
+    width: 1120px;;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.announcement-list .btn{
+    width: 200px;
+}
+.announcement-list textarea{
+    height: 400px;
+}
+
+/* .form-floating > label::after {
+    color: #dee2e6 !important;
+    background-color: transparent !important;
+} */
