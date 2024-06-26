@@ -1,59 +1,84 @@
 <%- include("partials/header") %>
 
     <div class="grid-item content">
-        <div class=" p-4">
-            <div class="container result text-left">
-                
-                <div class="row">
-                  <div class="col">
-                    Class
-                  </div>
-                  <div class="col">
-                    Letter Grade
-                  </div>
-                  <div class="col">
-                    Grade
-                  </div>
+
+      <div class="ms-4 mt-3">
+        <form action="/results/exam/student" method="post">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <!-- <label class="input-group-text" for="exam">Options</label> -->
+                        <select class="form-select" name="testname" id="exam">
+                          <option selected>Choose Exam...</option>
+                          <option value="test1">Test-1</option>
+                          <option value="test2">Test-2</option>
+                          <option value="test3">Test-3</option>
+                        </select>
+                    </div>
                 </div>
+                <div class="col">
+                    <button class="btn btn-light" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
 
-                <% let cumGrade = 0; 
-                let totSub = 0;
-
-                if (locals.grades) {
-                  grades.forEach(gra => { %>
-
-                  <div class="row mt-3 pt-1 pb-1 border">
-                    <div class="col">
-                      <%= gra.name %>
-                    </div>
-
-                    <div class="col">
-                        <% lettergrade=letterGrade(gra.grade) %>
-                      <%= lettergrade %>
-                    </div>
-
-                    <div class="col">
-                      <%= gra.grade %>
-                    </div>
-                  </div>
-                 <% cumGrade += gra.grade
-                    totSub++;
-                    });
-                    } %>
-
-
-                <div class="row mt-4 pt-1 pb-1 border border-light-subtle border-2">
-                    <div class="col">
-                        CGPA
-                    </div>
-                    <div class="col">
-                    </div>
-                    <div class="col">
-                        <%= Math.floor((cumGrade/totSub)*100)/100 %>
-                    </div>
+      <div class=" p-4">
+          <div class="container result text-left">
+              
+              <div class="row">
+                <div class="col">
+                  Class
+                </div>
+                <div class="col">
+                  Letter Grade
+                </div>
+                <div class="col">
+                  Grade
                 </div>
               </div>
+
+
+              <% let cumGrade = 0; 
+              let totSub = 0;
+
+              if (locals.grades) {
+                grades.forEach(gra => { %>
+
+                <div class="row mt-3 pt-1 pb-1 border">
+                  <div class="col">
+                    <%= gra.name %>
+                  </div>
+
+                  <div class="col">
+                      <% lettergrade=letterGrade(gra[testname]) %>
+                    <%= lettergrade %>
+                  </div>
+
+                  <div class="col">
+                    <%= gra[testname] %>
+                  </div>
+                </div>
+                <% cumGrade += gra[testname]
+                  totSub++;
+                  });
+                  } %>
+
+
+              <% if (locals.grades) { %>
+                <div class="row mt-4 pt-1 pb-1 border border-light-subtle border-2">
+                  <div class="col">
+                      CGPA
+                  </div>
+                  <div class="col">
+                  </div>
+                  <div class="col">
+                      <%= Math.floor((cumGrade/totSub)*100)/100 %>
+                  </div>
+              </div>
+              <% } %>
+            </div>
         </div>
     </div>
 

@@ -1,0 +1,110 @@
+<%- include("partials/header") %>
+
+    <div class="grid-item content">
+        <h2 class="mt-4 ms-4">
+            <%= classname %>
+        </h2>
+
+        <div class="ms-4 mt-3">
+            <form action="/results/exam" method="post">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <!-- <label class="input-group-text" for="exam">Options</label> -->
+                            <select class="form-select" name="testname" id="exam">
+                              <option selected>Choose Exam...</option>
+                              <option value="test1">Test-1</option>
+                              <option value="test2">Test-2</option>
+                              <option value="test3">Test-3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-light" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class=" p-4">
+            <div class="container results-teacher text-left">
+                <div class="row">
+                  <div class="col">
+                    Admn No
+                  </div>
+                  <div class="col">
+                    First Name
+                  </div>
+                  <div class="col">
+                    Last Name
+                  </div>
+                  <div class="col">
+                    Letter Grade
+                  </div>
+                  <div class="col">
+                    Grade
+                  </div>
+                </div>
+
+
+                <% if (locals.students) {
+                students.forEach(s => { %>
+                <div class="row mt-3 pt-1 pb-1 border">
+                    <div class="col">
+                    <%= s.admnno %>
+                    </div>
+                    <div class="col">
+                    <%= s.fname %>
+                    </div>
+                    <div class="col">
+                    <%= s.lname %>
+                    </div>
+                    <div class="col">
+                        <%= letterGrade(s[testname]) %>
+                    </div>
+                    <div class="col">
+                        <%= s[testname] %>
+                    </div>
+                </div>
+                <% });
+                } %>
+              </div>
+        </div>
+    </div>
+
+<%- include("partials/footer") %>
+
+
+
+<%
+    function letterGrade(grade) {
+        switch (grade) {
+            case 10:
+                return "A1"
+                break;
+            case 9:
+                return "A2"
+                break;
+            case 8:
+                return "B1"
+                break;
+            case 7:
+                return "B2"
+                break;
+            case 6:
+                return "C1"
+                break;
+            case 5:
+                return "C2"
+                break;
+            case 4:
+                return "D"
+                break;
+            default:
+                return "F"
+                break;
+        }
+    }
+
+%>

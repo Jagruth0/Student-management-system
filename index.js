@@ -76,9 +76,16 @@ app.get("/student/attendance", async(req, res)=> {
 
 app.get("/student/results", async(req, res)=> {
   if(req.isAuthenticated()){
+    var results = null;
+    var testname = null;
     try {
-      const result = await db.query("SELECT name,grade FROM enrollment e JOIN class c ON e.class_id = c.id WHERE e.student_admnno= $1 ORDER BY c.id ASC ",[req.user.admnno]);
-      res.render("student/results.ejs", {currentRes: true, username: req.session.username, grades: result.rows});
+      if(req.session.testname){
+        const result = await db.query(`SELECT name,${req.session.testname} FROM enrollment e JOIN class c ON e.class_id = c.id WHERE e.student_admnno= $1 ORDER BY c.id ASC `,[req.user.admnno]);
+        results = result.rows;
+        testname = req.session.testname;
+      }
+      req.session.testname = null;
+      res.render("student/results.ejs", {currentRes: true, username: req.session.username, grades: results, testname: testname});
     } catch (err) {
       console.log(err);
     }
@@ -146,6 +153,11 @@ app.post("/student/announcements/class", (req, res)=>{
 app.post("/student/announcement", (req,res)=>{
   req.session.annInd = parseInt(req.body.index);
   res.redirect("/student/announcement");
+});
+
+app.post("/results/exam/student", (req, res)=> {
+  req.session.testname = req.body.testname;
+  res.redirect("/student/results");
 });
 
 
@@ -305,6 +317,39 @@ app.get("/teacher/attendance/class", async(req, res)=>{
   }
 });
 
+app.get("/teacher/results", async(req, res)=> {
+  if(req.isAuthenticated()){
+    try {
+      const result = await db.query("SELECT name FROM staff s JOIN class c ON c.id = s.class_id WHERE s.teacher_id = $1 ORDER BY c.id ASC", [req.user.employee_id]);
+      res.render("teacher/classes.ejs", {classes: result.rows, username: req.session.username, currentRes: true});
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    res.redirect("/login/teacher");
+  }
+});
+
+app.get("/teacher/results/class", async(req, res)=> {
+  if (req.isAuthenticated()) {
+    try {
+        var studentlist = null;
+        var testname = null;
+      if(req.session.testname){
+        var result = await db.query(`SELECT admnno, fname, lname, ${req.session.testname} FROM enrollment e JOIN class c ON c.id = e.class_id JOIN student stu ON stu.admnno = e.student_admnno WHERE c.name = $1 ORDER BY stu.id ASC`,[req.session.classname]);
+        studentlist = result.rows;
+        testname = req.session.testname;
+      }
+      res.session.testname = null;
+      res.render("teacher/results.ejs", {classname: req.session.classname, username: req.session.username, currentRes: true, students: studentlist, testname: testname});
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
+    res.redirect("/login/teacher");
+  }
+});
+
 
 
 app.get("/logout/teacher", (req, res) => {
@@ -357,6 +402,15 @@ app.post("/class/attendance", async(req, res)=> {
   res.redirect("/teacher/attendance/class")
 });
 
+app.post("/teacher/results/class", (req, res)=>{
+  req.session.classname = req.body.class;
+  res.redirect("/teacher/results/class");
+});
+
+app.post("/results/exam", (req, res)=> {
+  req.session.testname = req.body.testname;
+  res.redirect("/teacher/results/class");
+});
 //Register new teacher
 
 app.post("/register/teacher", async (req, res) => {
