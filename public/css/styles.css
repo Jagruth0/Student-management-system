@@ -59,6 +59,9 @@ header{
 .announcement-list textarea{
     height: 400px;
 }
+#updateResultsForm option{
+    /* text-align: end; */
+}
 
 /* .form-floating > label::after {
     color: #dee2e6 !important;

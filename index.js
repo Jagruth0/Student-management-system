@@ -76,15 +76,15 @@ app.get("/student/attendance", async(req, res)=> {
 
 app.get("/student/results", async(req, res)=> {
   if(req.isAuthenticated()){
-    var results = null;
-    var testname = null;
+    let results = null;
+    let testname = null;
     try {
       if(req.session.testname){
         const result = await db.query(`SELECT name,${req.session.testname} FROM enrollment e JOIN class c ON e.class_id = c.id WHERE e.student_admnno= $1 ORDER BY c.id ASC `,[req.user.admnno]);
         results = result.rows;
         testname = req.session.testname;
+        req.session.testname = null;
       }
-      req.session.testname = null;
       res.render("student/results.ejs", {currentRes: true, username: req.session.username, grades: results, testname: testname});
     } catch (err) {
       console.log(err);
@@ -156,8 +156,12 @@ app.post("/student/announcement", (req,res)=>{
 });
 
 app.post("/results/exam/student", (req, res)=> {
-  req.session.testname = req.body.testname;
-  res.redirect("/student/results");
+  if(req.body.testname == "Choose Exam..."){
+    res.redirect("/student/results");
+  } else {
+    req.session.testname = req.body.testname;
+    res.redirect("/student/results");
+  }
 });
 
 
@@ -333,14 +337,14 @@ app.get("/teacher/results", async(req, res)=> {
 app.get("/teacher/results/class", async(req, res)=> {
   if (req.isAuthenticated()) {
     try {
-        var studentlist = null;
-        var testname = null;
+        let studentlist = null;
+        let testname = null;
       if(req.session.testname){
-        var result = await db.query(`SELECT admnno, fname, lname, ${req.session.testname} FROM enrollment e JOIN class c ON c.id = e.class_id JOIN student stu ON stu.admnno = e.student_admnno WHERE c.name = $1 ORDER BY stu.id ASC`,[req.session.classname]);
+        let result = await db.query(`SELECT admnno, fname, lname, ${req.session.testname} FROM enrollment e JOIN class c ON c.id = e.class_id JOIN student stu ON stu.admnno = e.student_admnno WHERE c.name = $1 ORDER BY stu.id ASC`,[req.session.classname]);
         studentlist = result.rows;
         testname = req.session.testname;
+        req.session.testname = null;
       }
-      res.session.testname = null;
       res.render("teacher/results.ejs", {classname: req.session.classname, username: req.session.username, currentRes: true, students: studentlist, testname: testname});
     } catch (err) {
       console.log(err);
@@ -408,9 +412,22 @@ app.post("/teacher/results/class", (req, res)=>{
 });
 
 app.post("/results/exam", (req, res)=> {
-  req.session.testname = req.body.testname;
-  res.redirect("/teacher/results/class");
+  if(req.body.testname == "Choose Exam..."){
+    res.redirect("/teacher/results/class");
+  } else {
+    req.session.testname = req.body.testname;
+    res.redirect("/teacher/results/class");
+  }
 });
+
+app.post("/results/update", async(req, res)=>{
+  const testname = req.body.testname;
+  req.body.admnno.forEach(async(ele) => {
+    const temp = ele.split(",");
+    await db.query(`UPDATE enrollment e SET ${testname} = $1 FROM class c WHERE c.id = e.class_id AND student_admnno = $2 AND c.name = $3`,[parseInt(temp[1]), temp[0], req.session.classname]);
+  });
+  res.redirect("/teacher/results/class");
+})
 //Register new teacher
 
 app.post("/register/teacher", async (req, res) => {
